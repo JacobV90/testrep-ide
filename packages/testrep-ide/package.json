@@ -1,0 +1,104 @@
+{
+  "name": "testrep-ide",
+  "version": "3.5.10",
+  "private": true,
+  "description": "Selenium IDE electron app",
+  "author": "Tomer <tomer@corevo.io>",
+  "homepage": "./",
+  "license": "Apache-2.0",
+  "scripts": {
+    "start": "concurrently \"BROWSER=none yarn start:react\"  \"wait-on http://localhost:3000 && export ELECTRON_START_URL=http://localhost:3000 && electron electron/main.js\"",
+    "start:react": "react-scripts start",
+    "build": "yarn build:react && yarn install-chromedriver && yarn build:electron && yarn package:electron",
+    "build:react": "react-scripts build",
+    "build:electron": "mkdir build/src && cp -r electron/. build/electron && cp -r src/shared/. build/src/shared",
+    "package:electron": "electron-builder -c.electronVersion $(node -e \"console.log(require('electron/package.json').version)\") --publish never",
+    "install-chromedriver": "mkdir -p files && node scripts/download-driver.js"
+  },
+  "main": "electron/main.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeleniumHQ/selenium-ide.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SeleniumHQ/selenium-ide/issues"
+  },
+  "build": {
+    "extends": null,
+    "appId": "org.seleniumhq.testrep-ide",
+    "extraMetadata": {
+      "main": "build/electron/main.js"
+    },
+    "files": [
+      "files/*",
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "productName": "TestRep IDE",
+    "asarUnpack": "files/*",
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools",
+      "darkModeSupport": true
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    },
+    "publish": {
+      "provider": "github",
+      "repo": "electron-cra-example",
+      "owner": "johndyer24"
+    },
+    "fileAssociations": [
+      {
+        "ext": "side",
+        "name": "Selenium IDE 3 project",
+        "role": "Editor"
+      },
+      {
+        "ext": "sideproj",
+        "name": "Selenium IDE project",
+        "role": "Editor"
+      }
+    ]
+  },
+  "dependencies": {
+    "@seleniumhq/get-driver": "^3.5.10",
+    "selenium-webdriver": "^4.0.0-alpha.7",
+    "@types/electron-devtools-installer": "^2.2.0",
+    "@types/jest": "26.0.0",
+    "@types/node": "14.0.13",
+    "@types/react": "16.9.38",
+    "@types/react-dom": "16.9.8",
+    "electron-devtools-installer": "^3.0.0",
+    "electron-is-dev": "^1.2.0",
+    "electron-reload": "^1.5.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-scripts": "3.4.1",
+    "typescript": "3.9.5"
+  },
+  "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
+    "electron": "^7.0.0",
+    "electron-builder": "^21.2.0",
+    "fs-extra": "^8.1.0",
+    "concurrently": "^5.2.0",
+    "wait-on": "^5.0.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
